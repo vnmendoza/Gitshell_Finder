@@ -146,10 +146,10 @@ $msArrays = @(( "NULL","NULL"),
 
 
 
-$Date='01/03/2018'              #Enter Date to Seach for (Example: '04/05/2016' )
-$FirstRun='yes'                   #Enter Yes if this is the first run of the day or if you closed Powershell ISE, it will load up the master XML.
+$Date='01/03/2018'              #Enter Date to Seach for (Example: '20180104' )/
+$FirstRun='noe'                   #Enter Yes if this is the first run of the day or if you closed Powershell ISE, it will load up the master XML.
                                  #This process takes a while so try not to close it after doing it once 
-$path="C:\Users\amejia\Desktop\Incentive Range"                  
+$path="C:\Users\VictorNoe\Desktop\Work\1"                  
 #
 #
 #   ***PRESS F5 or the PLAY button up top to RUN***
@@ -162,12 +162,10 @@ if ($FIRSTRUN -like "Yes") {
 
 
 $d1 = [DateTime]::Parse($Date)
+$programmerDate = $d1.ToString("yyyyMMdd")
 
-$d2=$d1.AddDays(1)
-$d1=$d1.ToShortDateString()
-$d2=$d2.ToShortDateString()
 #var
-    $htaxmls= @()           
+$htaxmls= @()           
 $completeXMLS= @()
 $completeXMLSRefield= @()
 $completeIDs=@()
@@ -182,7 +180,8 @@ $you2 = @()
 $intermediateArr = @()
 $users = @()
 $onlyCount = @()
-
+$file = @()
+$xmls = @()
 
 $start = Get-Date
 $todate = $date.Replace("/",".")
@@ -195,8 +194,16 @@ $table | Set-Content ($path + "\APoles_"+$todate+".csv")
 
 
 
-write-host "Running Date Search for"$d1
-$xmls += $xmls_full | Where-Object {($_.LastWriteTime -gt $d1 -and $_.LastWriteTime -lt $d2 )} #time stamp search
+write-host "Running Date Search for"$Date
+foreach($file in $xmls_full)
+{
+    if($file.Name -match $programmerDate)
+    {
+        $xmls += $file
+    }
+}    
+
+
 $total = $xmls.Count
 
 write-host "Parsing through XMLs (finding complete poles)"
